@@ -1,0 +1,11 @@
+[Unit]
+Description=BitcoinPremium daemon serivce
+After=network.target
+
+[Service]
+Type=simple
+User=BitcoinPremium
+ExecStart=/opt/BitcoinPremium/BitcoinPremiumd
+
+[Install]
+WantedBy=multi-user.target

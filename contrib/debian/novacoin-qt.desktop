@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=BitcoinPremium
+Comment=BitcoinPremium P2P Cryptocurrency
+Comment[ru]=BitcoinPremium, P2P криптовалюта
+Comment[fr]=BitcoinPremium, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=BitcoinPremium, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/BitcoinPremium-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/BitcoinPremium80.xpm
+MimeType=x-scheme-handler/BitcoinPremium;
+Categories=Office;

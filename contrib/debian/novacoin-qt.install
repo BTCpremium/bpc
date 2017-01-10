@@ -1,0 +1,5 @@
+BitcoinPremium-qt usr/bin
+share/pixmaps/BitcoinPremium32.xpm usr/share/pixmaps
+share/pixmaps/BitcoinPremium80.xpm usr/share/pixmaps
+debian/BitcoinPremium-qt.desktop usr/share/applications
+debian/BitcoinPremium-qt.protocol usr/share/kde4/services/

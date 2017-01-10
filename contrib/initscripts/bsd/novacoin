@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# PROVIDE: BitcoinPremium
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# BitcoinPremium_enable (bool): Set to NO by default. Set this variable to YES if you want to enable BitcoinPremium service.
+# BitcoinPremium_config (path): Set to /usr/local/etc/BitcoinPremium.conf by default.
+# BitcoinPremium_user:  The user account BitcoinPremium daemon runs as. It uses 'root' user by default.
+# BitcoinPremium_group: The group account BitcoinPremium daemon runs as. It uses 'wheel' group by default.
+# BitcoinPremium_datadir (str): Default to "/var/db/BitcoinPremium". Base data directory.
+
+. /etc/rc.subr
+
+name=BitcoinPremium
+rcvar=BitcoinPremium_enable
+
+: ${BitcoinPremium_enable:=NO}
+: ${BitcoinPremium_config=/usr/local/etc/BitcoinPremium.conf}
+: ${BitcoinPremium_datadir=/var/db/BitcoinPremium}
+: ${BitcoinPremium_user="root"}
+: ${BitcoinPremium_group="wheel"}
+
+required_files=${BitcoinPremium_config}
+command=/usr/local/bin/BitcoinPremiumd
+BitcoinPremium_chdir=${BitcoinPremium_datadir}
+pidfile="${BitcoinPremium_datadir}/BitcoinPremiumd.pid"
+stop_cmd=BitcoinPremium_stop
+command_args="-conf=${BitcoinPremium_config} -datadir=${BitcoinPremium_datadir} -daemon -pid=${pidfile}"
+start_precmd="${name}_prestart"
+
+BitcoinPremium_create_datadir()
+{
+	echo "Creating data directory"
+	eval mkdir -p ${BitcoinPremium_datadir}
+	[ $? -eq 0 ] && chown -R ${BitcoinPremium_user}:${BitcoinPremium_group} ${BitcoinPremium_datadir}
+}
+
+BitcoinPremium_prestart()
+{
+	if [ ! -d "${BitcoinPremium_datadir}/." ]; then
+		BitcoinPremium_create_datadir || return 1
+	fi
+}
+
+BitcoinPremium_requirepidfile()
+{
+	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
+		echo "${name} not running? (check $pidfile)."
+		exit 1
+	fi
+}
+
+BitcoinPremium_stop()
+{
+    BitcoinPremium_requirepidfile
+
+	echo "Stopping ${name}."
+	eval ${command} -conf=${BitcoinPremium_config} -datadir=${BitcoinPremium_datadir} stop
+	wait_for_pids ${rc_pid}
+}
+
+load_rc_config $name
+run_rc_command "$1"
